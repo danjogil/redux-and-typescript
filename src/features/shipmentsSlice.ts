@@ -7,6 +7,7 @@ import {
   UnknownAction,
 } from "@reduxjs/toolkit";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export interface ShipmentState {
   shipments: Shipment[];
@@ -40,6 +41,12 @@ const shipmentsSlice = createSlice({
       state.currentShipment = action.payload;
       state.isLoading = false;
     },
+    updateShipment(state) {
+      state.isLoading = false;
+    },
+    deleteShipment(state) {
+      state.isLoading = false;
+    },
     loading(state) {
       state.isLoading = true;
     },
@@ -58,6 +65,8 @@ export const getShipments =
       dispatch(shipmentsSlice.actions.getShipments(data));
     } catch (error) {
       console.error("Error fetching shipments:", error);
+      toast.error("Shipments could not be loaded");
+      throw new Error("Shipments could not be loaded");
     }
   };
 
@@ -73,6 +82,55 @@ export const getShipment =
       dispatch(shipmentsSlice.actions.getShipment(data));
     } catch (error) {
       console.error("Error fetching shipment:", error);
+      toast.error("Shipment could not be loaded");
+      throw new Error("Shipment could not be loaded");
+    }
+  };
+
+export const updateShipment =
+  (
+    updateObj: Shipment,
+    id: string
+  ): ThunkAction<void, RootState, unknown, UnknownAction> =>
+  async (dispatch) => {
+    try {
+      dispatch(shipmentsSlice.actions.loading());
+
+      await axios.put<Shipment>(
+        `https://practice-api-beryl.vercel.app/shipments/${id}`,
+        updateObj
+      );
+
+      dispatch(shipmentsSlice.actions.updateShipment());
+      dispatch(getShipment(id));
+
+      toast.success("Shipment successfully updated");
+    } catch (error) {
+      console.error("Error updating shipment:", error);
+      dispatch(getShipment(id));
+      toast.error("Shipment could not be updated");
+      throw new Error("Shipment could not be updated");
+    }
+  };
+
+export const deleteShipment =
+  (id: string): ThunkAction<void, RootState, unknown, UnknownAction> =>
+  async (dispatch) => {
+    try {
+      dispatch(shipmentsSlice.actions.loading());
+
+      await axios.delete<Shipment>(
+        `https://practice-api-beryl.vercel.app/shipments/${id}`
+      );
+
+      dispatch(shipmentsSlice.actions.deleteShipment());
+      toast.success("Shipment successfully deleted");
+      dispatch(getShipments());
+    } catch (error) {
+      console.error("Error deleting shipment:", error);
+      dispatch(getShipments());
+      toast.error("Shipment could not be deleted");
+      throw new Error("Failed deleting your shipment");
     }
   };
 
