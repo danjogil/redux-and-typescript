@@ -54,7 +54,7 @@ function ShipmentForm({ shipment }: ShipmentFormProps): JSX.Element {
   }
 
   return (
-    <div className="w-full bg-white p-16 rounded-md space-y-4 border">
+    <div className="w-full bg-white p-16 rounded-md space-y-4 border shadow-2xl">
       <div className="flex justify-end">
         <Button variant="outline" onClick={() => navigate("/shipments")}>
           &larr; Back

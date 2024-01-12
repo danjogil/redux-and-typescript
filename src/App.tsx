@@ -6,7 +6,7 @@ import PageNotFound from "./ui/PageNotFound";
 
 function App(): JSX.Element {
   return (
-    <div className="p-4">
+    <div>
       <BrowserRouter>
         <Routes>
           <Route index element={<Navigate replace to="shipments" />} />

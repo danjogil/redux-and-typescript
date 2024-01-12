@@ -25,7 +25,7 @@ export default function ShipmentsTable(): JSX.Element {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="mx-auto p-10 bg-gradient-to-r from-cyan-500 to-blue-500">
       <DataTable columns={columns} data={shipments} />
     </div>
   );
