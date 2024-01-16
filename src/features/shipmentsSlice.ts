@@ -50,6 +50,18 @@ const shipmentsSlice = createSlice({
     loading(state) {
       state.isLoading = true;
     },
+    error(state) {
+      state.currentShipment = {
+        id: "",
+        orderNo: "",
+        date: "",
+        customer: "",
+        trackingNo: "",
+        status: "",
+        consignee: "",
+      };
+      state.isLoading = false;
+    },
   },
 });
 
@@ -81,6 +93,7 @@ export const getShipment =
       const data: Shipment = res.data || {};
       dispatch(shipmentsSlice.actions.getShipment(data));
     } catch (error) {
+      dispatch(shipmentsSlice.actions.error());
       console.error("Error fetching shipment:", error);
       toast.error("Shipment could not be loaded");
       throw new Error("Shipment could not be loaded");
